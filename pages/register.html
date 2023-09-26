@@ -20,7 +20,9 @@
                 <div class="flex flex-col justify-center items-center">
                     <form id="register" class="w-[300px] gap-[20px] flex flex-col">
                         <h1 class="text-2xl tracking-tight font-bold">Login</h1>
+                        <input type="text" class="px-3 py-2 border rounded w-full outline-none" placeholder="Enter name" name="" id="name">
                         <input type="email" class="px-3 py-2 border rounded w-full outline-none" placeholder="Enter emai;" name="" id="email">
+                        <input type="number" class="px-3 py-2 border rounded w-full outline-none" placeholder="Enter num" name="" id="phonenumber">
                         <input type="password" class="px-3 py-2 border rounded w-full outline-none" placeholder="Enter password" name="" id="password">
                         <input type="submit" value="Login" class="px-3 py-2 border rounded w-full bg-[#40787C] text-white">
                     </form>
@@ -34,12 +36,16 @@
     <script>
         document.getElementById("register").addEventListener("submit",async(e)=>{
             e.preventDefault()
+            let phoneNumber = document.getElementById("phonenumber").value
             let email = document.getElementById("email").value
+            let name = document.getElementById("name").value
             let password = document.getElementById("password").value
             console.log('vlivked')
 
-               axios.post("/login",{
+               axios.post("/register",{
+                name,
                 email,
+              phoneNumber,
               password
             })
             .then((res)=>{

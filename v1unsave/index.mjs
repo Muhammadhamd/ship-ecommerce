@@ -10,6 +10,13 @@ import brokerRoute from "./routes/broker.mjs"
 import howehelpRoute from "./routes/howwehelp.mjs"
 import didyouknowRoute from "./routes/didyouknow.mjs"
 import postRoute from "./routes/post.mjs"
+import adminloginrouter from "./routes/subscribe.mjs"
+import subscriberouter from "./routes/adminlogin.mjs"
+import authRoute from "./routes/auth.mjs"
+import reviewRoute from "./routes/review.mjs"
+
+router.use(authRoute)
+router.use(reviewRoute)
 router.use(postRoute)
 router.use(homeRoute)
 router.use(aboutRoute)
@@ -20,4 +27,7 @@ router.use (shopRoute)
 router.use (brokerRoute)
 router.use (howehelpRoute)
 router.use (didyouknowRoute)
+router.use (subscriberouter)
+router.use (adminloginrouter)
+
 export default router

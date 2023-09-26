@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Dashboard</title>
+    <style>
+        body {
+            background-color: #014d53;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .data-card {
+            background-color: #014d53;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 10px;
+        }
+
+        .bordered-div {
+            border: 1px solid #BFA888;
+            padding: 10px;
+        }
+
+        .data-card h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .data-card p {
+            margin: 5px 0;
+         
+            color: white; /* Set text color to white */
+        }
+
+        .modal {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="popupForm" class="modal">
+        <div class="modal-content">
+            <h2 class="text-xl font-semibold">Data Details</h2>
+            <form id="popupContent">
+                <input type="number" id="price" name="_id" value="" placeholder="add pricee">
+                <input type="number" id="issale" name="userAccountId" placeholder="add sale on this product in %" value="">
+            
+                <!-- Other input fields -->
+                <input type="submit">
+            </form>
+            <button class="bg-blue-600 text-white py-2 px-4 mt-4 rounded-lg hover:bg-blue-700" onclick="closePopupForm()">Close</button>
+        </div>
+    </div>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const container = document.getElementById("container");
+
+            // Simulated data for demonstration
+            try {
+                const res  = await axios.get("/valutiondata")
+                let data = res.data
+
+               
+            // Loop through the data and create cards for each entry
+            data.forEach(item => {
+                const card = document.createElement("div");
+                card.classList.add("data-card");
+
+                // Add a bordered child div
+                // card.addEventListener("click", () => openPopupForm(item));
+
+                card.innerHTML += `
+                <div class="bordered-div">
+                    <h2>${item.username}</h2>
+                    <p id="useremail_${item._id}">Email: ${item.useremail}</p>
+                    <p id="userphoneNumber_${item._id}">Phone Number: ${item.userphoneNumber}</p>
+                    <p id="status_${item._id}">Status: ${item.status}</p>
+                    <p id="firstName_${item._id}">First Name: ${item.firstName}</p>
+                    <p id="lastName_${item._id}">Last Name: ${item.LastName}</p>
+                    <p id="engine_${item._id}">Engine: ${item.engine}</p>
+                    <p id="hours_${item._id}">Hours: ${item.hours}</p>
+                    <p id="boatName_${item._id}">Boat Name: ${item.boatName}</p>
+                    <p id="generator_${item._id}">Generator: ${item.generator}</p>
+                    <p id="boatCondition_${item._id}">Boat Condition: ${item.boatcondition}</p>
+                    <p id="location_${item._id}">Location: ${item.location}</p>
+                    <p id="ownerOutright_${item._id}">Owner Outright: ${item.owneroutright}</p>
+                    <p id="amountOfOwner_${item._id}">Amount of Owner: ${item.amountOfOwner}</p>
+                    <p id="route_${item._id}">Route: ${item.route}</p>
+                    <p id="attachment_${item._id}">Attachment: ${item.attatchment}</p>
+                    <p id="addNote_${item._id}">Add Note: ${item.addNote}</p>
+                    <p id="address_${item._id}">Address: ${item.address}</p>
+                    <p id="make_${item._id}">Make: ${item.make}</p>
+                    <p id="model_${item._id}">Model: ${item.model}</p>
+                
+                    <div class="flex gap-[5px] justify-end">
+                        ${
+                            item.status === "pending" 
+                       ? `<button class="px-3 py-2 text-white text-sm bg-violet-500" onclick="declineProduch('${item._id}')">decline</button> 
+                        <button class="px-3 py-2 text-white text-sm bg-violet-500" onclick=" openPopupForm('${item._id}')">Publish as Product</button>`
+                    : `admin has ${item.status} this request`
+                 
+                }
+                        
+                        </div>
+                </div>
+                `;
+
+                container.appendChild(card);
+            });
+            } catch (error) {
+                console.log(error)
+            }
+        });
+          
+
+        async function declineProduch(id){
+
+            try {
+                const res = await axios.put(`/update-status-valution-req/${id}`,{
+                    status:"declined"
+                })
+                console.log(res)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        async function openPopupForm(dataItem) {
+            console.log(dataItem)
+             
+
+            try {
+                const res = await axios.post(`/publish-product/${dataItem}`)
+                console.log(res)
+            } catch (error) {
+                console.log(error)
+                
+            }
+        }
+
+        // Function to close the popup form
+        function closePopupForm() {
+            const popupForm = document.getElementById("popupForm");
+            popupForm.style.display = "none";
+        }
+
+    </script>
+</body>
+</html>

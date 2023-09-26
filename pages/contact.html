@@ -144,40 +144,40 @@
 
          <div class="flex flex-wrap justify-center mt-6 overflow-hidden"style="font-family: 'Urbanist';">
             <div class="flex justify-center border-r border-[#707070] max-w-[100%] md:max-w-[43%] w-full " data-aos="slide-right">
-                <form action="" class="p-[0px] sm:p-[20px] w-full max-w-[80%] gap-[5px] flex flex-col">
+                <form id="contactform" class="p-[0px] sm:p-[20px] w-full max-w-[80%] gap-[5px] flex flex-col">
                     <h1 style="font-family: 'Playfair Display';" class="text-2xl font-bold">Feel Free to Contact with us</h1>
 
                     <label for="" class="block">
                         <span class="text-base tracking-[-0.025rem]">
                             Name
                         </span>
-                        <input type="text" name="" placeholder="Enter your Name" id="" class="outline-none bg-transparent text-base my-[10px] px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
+                        <input type="text" name="" placeholder="Enter your Name" id="name" class="outline-none bg-transparent text-base my-[10px] px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
                     </label>
                     <label for="" class="block">
                         <span class="text-base tracking-[-0.025rem]">
                             Email
                         </span>
-                        <input type="email" name="" placeholder="Enter your nemail" id="" class="outline-none bg-transparent text-base my-[10px] px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
+                        <input type="email" name="" placeholder="Enter your nemail" id="email" class="outline-none bg-transparent text-base my-[10px] px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
                     </label>
 
                      <label for="" class="block">
                         <span class="text-base tracking-[-0.025rem]">
                             Number
                         </span>
-                        <input type="number" name="" placeholder="Enter your Phone Number" id="" class="outline-none bg-transparent my-[10px] text-base px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
+                        <input type="number" name="" placeholder="Enter your Phone Number" id="number" class="outline-none bg-transparent my-[10px] text-base px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
                     </label>
                     <label for="" class="block">
                         <span class="text-base tracking-[-0.025rem]">
                             Subject
                         </span>
-                        <input type="text" name="" placeholder="Enter your Subject" id="" class="text-slate-500 bg-transparent text-base my-[10px] px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
+                        <input type="text" name="" placeholder="Enter your Subject" id="subject" class="text-slate-500 bg-transparent text-base my-[10px] px-[3%] py-[1.5%] rounded border border-[#BFA888] w-full">
                     </label>
                     <label for="" class="block">
                         <span class="text-base tracking-[-0.025rem]">
                             Messege(Optional)
                         </span>
                         
-                        <textarea cols="0" rows="4" name="" placeholder="Enter your Messege" id="" class="outline-none bg-transparent my-[10px] text-base px-3 py-1.5 rounded border border-[#BFA888] w-full"></textarea>
+                        <textarea cols="0" rows="4" name="" placeholder="Enter your Messege" id="message" class="outline-none bg-transparent my-[10px] text-base px-3 py-1.5 rounded border border-[#BFA888] w-full"></textarea>
                     </label>
                     <button class="py-[2%] w-full bg-white rounded shadow text-black font-semibold">Send</button>
                 </form>
@@ -308,7 +308,9 @@
         <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
         <script src="../assets/js/custom.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-        <script type="text/javascript">
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
+       
+       <script type="text/javascript">
             function showLoader(){
       $.LoadingOverlay("show",{
         background  : "#e5e7eb",
@@ -325,6 +327,26 @@ setTimeout(function(){
 $.LoadingOverlay("hide");
 }, 4500);
 }
+
+
+     document.getElementById('contactform').addEventListener("submit",(e)=>{
+        e.preventDefault()
+
+            axios.post("/contactReq",{
+                email:document.getElementById("email").value,
+                name:document.getElementById("name").value,
+                phoneNumber:document.getElementById("number").value,
+                message:document.getElementById("message").value,
+                subject:document.getElementById("subject").value
+            })
+            .then((res)=>{
+                console.log(res)
+            })
+            .catch((e)=>{
+                console.log(e)
+            })
+            
+     })
         </script>
 </body>
 </html>

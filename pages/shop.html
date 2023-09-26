@@ -30,7 +30,7 @@
             rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
       </head>
-<body onload="showLoader()" class='bg-[#014d53] text-white max:[1400px]:text-[16px] min-[1450px]:text-[17px] min-[1550px]:text-[18px] min-[1650px]:text-[19px] min-[1750px]:text-[20px] min-[1650px]:text-[19px] min-[1750px]:text-[20px] min-[1850px]:text-[21px] min-[1950px]:text-[22px] min-[2050px]:text-[23px] min-[2150px]:text-[24px] min-[2250px]:text-[25px] min-[2350px]:text-[26px] min-[2450px]:text-[26px] min-[2550px]:text-[27px] min-[2650px]:text-[28px] min-[2750px]:text-[29px] min-[2850px]:text-[30px] min-[2950px]:text-[31px] min-[3050px]:text-[32px] '>
+<body class='bg-[#014d53] text-white max:[1400px]:text-[16px] min-[1450px]:text-[17px] min-[1550px]:text-[18px] min-[1650px]:text-[19px] min-[1750px]:text-[20px] min-[1650px]:text-[19px] min-[1750px]:text-[20px] min-[1850px]:text-[21px] min-[1950px]:text-[22px] min-[2050px]:text-[23px] min-[2150px]:text-[24px] min-[2250px]:text-[25px] min-[2350px]:text-[26px] min-[2450px]:text-[26px] min-[2550px]:text-[27px] min-[2650px]:text-[28px] min-[2750px]:text-[29px] min-[2850px]:text-[30px] min-[2950px]:text-[31px] min-[3050px]:text-[32px] '>
     <div>
         <div class=" text-white " style="background-image:linear-gradient( 360deg , #014d53, #9a030000 15%)  , url('../assets/images/shoppage/header-banner.jpg'); background-size: cover;">
             <nav style="font-family: 'Urbanist';" class="text-[90%] font-[100]">
@@ -653,16 +653,13 @@ document.getElementById("searchQuerry").addEventListener("submit", (e) => {
     console.log("Form submitted");
     const currentURL = window.location.href;
     const input_search_Value = document.getElementById("searchInput").value;
-    const isExistingQueryParams = currentURL.includes('?');
-    console.log(isExistingQueryParams)
     let input_search;
-    if (isExistingQueryParams) {
-        input_search = `${currentURL}&q=${searchInputValue}`
-    }else{
-        input_search = `?q=${searchInputValue}`
-    }
-        window.history.pushState(null, null, input_search)
-    if(document.getElementById("searchInput").value != '' ){
+        input_search = `?q=${input_search_Value}`
+            
+            
+       let datahis = window.history.pushState(null,null, input_search)
+    console.log(datahis)
+       if(document.getElementById("searchInput").value != '' ){
         document.getElementById("searchedBy").innerHTML = document.getElementById("searchInput").value 
 
     }else{
@@ -672,6 +669,32 @@ document.getElementById("searchQuerry").addEventListener("submit", (e) => {
     axios.get(`/posts?q=${document.getElementById("searchInput").value || ""}`)
     .then((res)=>{
         console.log(res)
+        let data = res.data
+        data.map((each)=>{
+            let postaray;
+            if(each.issale){
+                let newPrice =  each.price * each.issale / 100
+                 postaray = {
+                title:each.title,
+        text:each.text,
+        issale:each.issale,
+        price:each.price,
+        newprice:newPrice
+        
+            }
+           
+            }else{
+                 postaray = {
+                title:each.title,
+        text:each.text,
+        issale:each.issale,
+        price:each.price,
+            }
+            
+            }
+            
+            console.log(postaray)
+        })
     })
     .catch((e)=>{
         console.log(e)
