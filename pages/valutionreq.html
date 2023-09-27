@@ -87,10 +87,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const container = document.getElementById("container");
-
-            // Simulated data for demonstration
+        async function renderrequests(){
             try {
                 const res  = await axios.get("/valutiondata")
                 let data = res.data
@@ -98,6 +95,8 @@
                
             // Loop through the data and create cards for each entry
             data.forEach(item => {
+            const container = document.getElementById("container");
+
                 const card = document.createElement("div");
                 card.classList.add("data-card");
 
@@ -145,6 +144,11 @@
             } catch (error) {
                 console.log(error)
             }
+        }
+        document.addEventListener("DOMContentLoaded", async () => {
+
+            // Simulated data for demonstration
+            renderrequests()
         });
           
 
@@ -153,6 +157,9 @@
             try {
                 const res = await axios.put(`/update-status-valution-req/${id}`,{
                     status:"declined"
+                })
+                .then(()=>{
+                    renderrequests()
                 })
                 console.log(res)
             } catch (error) {
@@ -165,6 +172,9 @@
 
             try {
                 const res = await axios.post(`/publish-product/${dataItem}`)
+                .then(()=>{
+                    renderrequests()
+                })
                 console.log(res)
             } catch (error) {
                 console.log(error)

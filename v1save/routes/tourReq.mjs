@@ -38,7 +38,8 @@ router.post("/request-tour", async(req,res)=>{
    const isRequested = await visiteReqCol.findOne({
     $and: [
       { 'Data.data._id': Data.data._id },
-      { 'currentUser._id': currentUser._id }
+      { 'currentUser._id': currentUser._id },
+      { status: 'pending' }
     ]
   });
    if(isRequested){
@@ -49,10 +50,10 @@ router.post("/request-tour", async(req,res)=>{
    }
    await visiteReqCol.insertOne({
     Data,
-    currentUser
-
+    currentUser,
+    status:'pending'
    })
-
+  
    res.status(200).send("data uploaded")
    const transporter = await nodemailer.createTransport({
       host: 'smtp.ethereal.email',
@@ -81,7 +82,20 @@ router.post("/request-tour", async(req,res)=>{
       }
     });
 })
-
+router.get("/tour-requests-currentuser", async(req,res ,next)=>{
+  const currentUser = req.decodedData
+  const userid = currentUser._id
+  const requests =await visiteReqCol.find({'currentUser._id' : userid}).toArray()
+  if (requests.length > -1) {
+    res.send(requests)
+       return
+     }
+     res.send("no tour request")
+      
+   
+   
+   
+})
 
 
 export default router

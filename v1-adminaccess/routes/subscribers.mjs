@@ -25,10 +25,20 @@ router.get("/countsubscribers", async(req,res ,next)=>{
     res.json({ count: subscribers });
      
 })
+router.delete('/subscriber/:id',async(req,res)=>{
+  const subid = req.params.id
+
+  const delte = await subscribeCol.findOneAndDelete({_id: new ObjectId(subid)})
+  
+  delte ?  res.send("subscriber is removed") : res.status(404).send("they maybe already removed or unsubscribed") 
+})
    router.get("/subscribers",async(req,res)=>{
 
     const sub = await subscribeCol.find({}).toArray()
     res.send(sub) 
   })
+  router.get("/admin/subscribers",(req,res) =>{
 
+    res.sendFile(path.join(__dirname , "pages/subscribedb.html"))
+  })
   export default router

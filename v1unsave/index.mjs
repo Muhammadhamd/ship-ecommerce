@@ -14,7 +14,11 @@ import adminloginrouter from "./routes/subscribe.mjs"
 import subscriberouter from "./routes/adminlogin.mjs"
 import authRoute from "./routes/auth.mjs"
 import reviewRoute from "./routes/review.mjs"
+import ourshipcaptionRoute from "./routes/ourshipcaption.mjs"
+import emploiesRoute from "./routes/emploies.mjs"
 
+router.use(emploiesRoute)
+router.use(ourshipcaptionRoute)
 router.use(authRoute)
 router.use(reviewRoute)
 router.use(postRoute)

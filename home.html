@@ -788,7 +788,7 @@
                     class=" xl:pt-[5%] overflow-hidden text-white flex flex-wrap w-full xl:justify-between justify-end">
                     <div class="w-[33%] flex max-[1232px]:w-full justify-end max-[1232px]:justify-center ">
 
-                        <form action="visite-req-form" class="w-[74%] max-[390px]:w-[95%] w-[100%] min-[1232px]:ml-[1%]"
+                        <form id="visite-req-form" class="w-[74%] max-[390px]:w-[95%] w-[100%] min-[1232px]:ml-[1%]"
                             data-aos="slide-right">
                             <div class="flex justify-center">
                                 <div>
@@ -801,17 +801,17 @@
                             <label for="">
                                 <span style="font-family: 'Urbanist';" class="md:text-sm font-semibold">Suggest
                                     Date</span>
-                                <input style="font-family: 'Urbanist';" type="date" id=""
+                                <input style="font-family: 'Urbanist';" type="date" id="visite-date"
                                     class="border-2 w-full bg-transparent my-[3%] px-[3%] py-[2%]">
                             </label>
                             <label for="">
                                 <span style="font-family: 'Urbanist';" class="text-sm font-semibold">Suggest Time</span>
-                                <input style="font-family: 'Urbanist';" type="time" id=""
+                                <input style="font-family: 'Urbanist';" type="time" id="visite-time"
                                     class="border-2 w-full bg-transparent my-[3%] px-[3%] py-[2%]">
                             </label>
                             <label style="font-family: 'Urbanist';" for="">
                                 <span class="text-sm font-semibold">Description</span>
-                                <textarea style="font-family: 'Urbanist';" id=""
+                                <textarea style="font-family: 'Urbanist';" id="visite-message"
                                     class="border-2 w-full bg-transparent my-[3%] px-[3%] py-[2%] h-[150px] outline-none "> Hi, I'm Joe Ross! I'm interested in scheduling a tour of your Yacht and am available during the following times: - Apr 17th at 09:00 AM
                              Thanks!</textarea>
                             </label>
@@ -917,7 +917,7 @@
                     style="background-image: url('./images/page2/h1_images_bg-min.jpg'); background-size: cover;">
 
                     <div class="border-2 border-[#Bfa888] w-full p-[5%] sm:p-[4%] flex justify-center items-center">
-                        <form action=""
+                        <form id="subscribe-form"
                             class="px-[3%] sm:px-[0] border-[#Bfa888] border text-white max-w-[100%] md:max-w-[52%] w-full  flex flex-col items-center justify-end py-[4%]"
                             style="    background: #ffffff40;
                 ">
@@ -927,10 +927,10 @@
                                 sit amet consectetur adipisicing elit. Vel, cum!</p>
                             <div style="font-family: 'Urbanist';"
                                 class="flex max-w-[80%] w-full justify-center mt-2 overflow-hidden rounded">
-                                <input type="email" name="" placeholder="Enter Email.." id=""
+                                <input type="email" name="" placeholder="Enter Email.." id="subscribe-email"
                                     class="outline-none border px-[2%] py-[.5%] max-w-[90%] w-full">
-                                <input type="submit" value="Subscribe"
-                                    class="text-white font-semibold bg-[#Bfa888] px-[4%] py-[3%]">
+                                <input type="submit" value="Subscribe" id=""
+                                    class=" font-semibold bg-[#Bfa888] px-[4%] py-[3%]">
                             </div>
                         </form>
                     </div>
@@ -1070,7 +1070,9 @@
             <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
             <script src="./assets/js/custom.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
-            <script type="text/javascript">
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
+           
+           <script type="text/javascript">
                 function showLoader(){
           $.LoadingOverlay("show",{
             background  : "#e5e7eb",
@@ -1086,6 +1088,46 @@ setTimeout(function(){
     $.LoadingOverlay("hide");
 }, 4500);
 }
+
+
+
+document.getElementById("visite-req-form").addEventListener("submit",async(e)=>{
+e.preventDefault()
+    await axios.post("/request-visite",{
+        message:document.getElementById("visite-message").value,
+    date:document.getElementById("visite-date").value,
+    time:document.getElementById("visite-time").value
+    })
+    .then((res)=>{console.log(res)})
+
+   .catch((e)=>{console.log(e)})
+})
+
+document.getElementById("subscribe-form").addEventListener("submit",async(e)=>{
+    console.log(document.getElementById("subscribe-email").value)
+e.preventDefault()
+     axios.post("/subscribe",{
+        email:document.getElementById("subscribe-email").value
+   
+    })
+    .then((res)=>{console.log(res)})
+
+   .catch((e)=>{console.log(e)})
+})
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    axios.get("/Admintoken")
+    .then((res)=>{console.log(res.data.Tokenis)
+        const isToken = res.data.Tokenis
+
+        if (isToken) {
+            document.getElementById("loginbtn").style.display = "none"
+        }
+    })
+    .catch((res)=>{console.log(res.response.data)})
+})
+
             </script>
   
 </body>

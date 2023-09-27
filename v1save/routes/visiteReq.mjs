@@ -50,6 +50,7 @@ res.status(401).send("fill all requests")
     status:"pending"
 
    })
+  
 
    res.status(200).send("your request is submited we will aprove it later")
    const transporter = await nodemailer.createTransport({
@@ -80,6 +81,17 @@ res.status(401).send("fill all requests")
     });
 })
 
+router.get("/visit-requests-currentuser", async(req,res ,next)=>{
+  const currentUser = req.decodedData
+  const userid = currentUser._id
+  const requests =await visiteReqCol.find({userAccoundId : userid}).toArray()
+  if (requests) {
+    res.send(requests)
+       return
+     }
+     re.send("no visit request")
+   
+})
 
 
 export default router

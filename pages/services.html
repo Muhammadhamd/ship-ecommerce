@@ -401,6 +401,8 @@ contact list for shippers regarding the three different options.
       
           </div>
       </footer>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
       <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -422,6 +424,18 @@ setTimeout(function(){
 $.LoadingOverlay("hide");
 }, 4500);
 }
+
+
+document.addEventListener("DOMContentLoaded",async()=>{
+
+  try {
+    const res= await axios.get("/ship-captions")
+    console.log(res.data)
+  } catch (error) {
+    console.log(errror)
+    
+  }
+})
       </script>
 </body>
 </html>

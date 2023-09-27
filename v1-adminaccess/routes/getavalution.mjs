@@ -62,11 +62,15 @@ router.put("/update-status-get-a-valution/:requestId", async (req, res) => {
        res.status(500).send("An error occurred while updating the status");
      }
   });
-  router.get("/tour-requests", async(req,res ,next)=>{
+  router.get("/valution-requests", async(req,res ,next)=>{
 
     const requests =await visiteReqCol.find({}).toArray()
    res.send(requests)
      
 })
 
+router.get("/admin/valution-requests",(req,res) =>{
+
+  res.sendFile(path.join(__dirname , "pages/valutionreq.html"))
+})
   export default router
