@@ -12,7 +12,6 @@
 
         <div class=" rounded-lg shadow-md w-full lg:w-2/3" id="req-div">
             <!-- Request 1 -->
-        
            
         </div>
     </div>
@@ -23,25 +22,25 @@
  <script>
     async function renderrequests(){
         try {
-            const res = await axios.get("/visite-requests")
+            const res = await axios.get("/tour-requests")
             let data = res.data
+
             let div = ''
 
             data.map((each)=>{
                 div += `  <div class="p-4 border-b dark-bg text-white" >
                 <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-semibold ">${each.name}</h2>
-                    <span class="">${each.email}</span>
+                    <h2 class="text-lg font-semibold ">${each.currentUser.name}</h2>
+                    <span class="">${each.currentUser.email}</span>
                 </div>
-                <p class="mt-2">${each.phoneNumber}</p>
-                <p class="mt-2">Date to Visit: ${each.dateToVisit}</p>
-                <p class="mt-2">Time to Visit:${each.timeToVisit}</p>
+                <p class="mt-2">${each.currentUser.phoneNumber}</p>
+                <a href="/post/${each.Data.data.inserting_post._id}" class="font-semibold text-xl" target='_blank'>${each.Data.data.inserting_post.boatName}</a>
                 <p class="mt-2 text-gray-500">Requested on: ${each.timeStamp}</p>
                 <div>
                     <p class="mt-2 font-bold text-blue-600">Status: ${each.status}</p>
                     <div>
                         ${
-                            each.status === "pending" ?` <button onclick="SetStatusAprove('${each._id}')">Aprove</button>
+                            each.status === "pending" || !each.status ?` <button onclick="SetStatusAprove('${each._id}')">Aprove</button>
                         <button onclick="SetStatusdecline('${each._id}')">decline</button>` : ''
                         }
                     </div>
@@ -57,19 +56,21 @@
         } catch (error) {
             console.log(error)
         }
-    }
+    } 
     document.addEventListener("DOMContentLoaded",async()=>{
 
-      renderrequests()
+       renderrequests()
     })
 
 
     async function SetStatusAprove(id) {
             try {
-                const res = await axios.put(`/update-status-visite-req/${id}`, {
+                const res = await axios.put(`/update-status-tour-req/${id}`, {
                     status: "Approved"
                 })
-                .then(()=>renderrequests())
+                .then(()=>{
+                    renderrequests()
+                })
                 console.log(res.data);
             } catch (error) {
                 console.log(error);
@@ -79,11 +80,12 @@
         async function SetStatusdecline(id) {
             console.log("clicked");
             try {
-                const res = await axios.put(`/update-status-visite-req/${id}`, {
+                const res = await axios.put(`/update-status-tour-req/${id}`, {
                     status: "Declined"
                 })
-                .then(()=>renderrequests())
-
+                .then((res)=>{console.log(res)
+                renderrequests()
+                })
                 .catch((res)=>{console.log(res)})
             } catch (error) {
                 console.log(error);

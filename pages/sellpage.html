@@ -273,7 +273,7 @@
                                     <span class="text-sm tracking-[-0.025rem]">
                                       Attatchment(Png/Jpeg/Jpg/PDF)
                                     </span>
-                                    <input type="file" name="" placeholder="Owner outright" id="attatchment" class="outline-none bg-transparent text-sm px-3 py-[2%] rounded border  border-[#BFA888] w-[100%]">
+                                    <input type="file" name="" multiple placeholder="Owner outright" id="attatchment" class="outline-none bg-transparent text-sm px-3 py-[2%] rounded border  border-[#BFA888] w-[100%]">
                                 </label>
                                 <label for="" class="block w-[100%] md:w-[45%]">
                                     <span class="text-sm tracking-[-0.025rem]">
@@ -438,7 +438,7 @@ document.getElementById("getAValuation").addEventListener("submit",async(e)=>{
            owneroutright:document.getElementById("owneroutright").value ,
            amountOfOwner:document.getElementById("amountofowner").value  , 
            route:document.getElementById("route").value ,
-           attatchment:document.getElementById("attatchment").files[0] ,
+           attatchment:document.getElementById("attatchment").files ,
            addNote:document.getElementById("note").value , 
            address  :document.getElementById("address").value , 
         make:document.getElementById("make").value ,

@@ -28,7 +28,7 @@ const db = client.db("yacht"),
 
 router.post("/subscribe", async(req,res)=>{
 
-    const email = req.query.email
+    const email = req.body.email
     console.log(email)
     const isSubscribed =await subscribeCol.findOne({email:email})
 

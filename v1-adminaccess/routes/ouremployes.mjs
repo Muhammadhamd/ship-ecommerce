@@ -4,37 +4,31 @@ import { client } from '../../db/mongodb.mjs'
 import { ObjectId } from 'mongodb'
 
 const db = client.db("yacht");
-const col = db.collection("shipcaption");
+const col = db.collection("employe");
 
 let router = express.Router()
 
 
 
 // POST    /api/v1/post
-router.post('/add-ship-caption', async (req, res, next) => {
+router.post('/add-employ', async (req, res, next) => {
 
 
     console.log(req.body)
-    const {image , name , email , Instagramlink , twitterink , facebooklink , linkedinlink , phonenumber} = req.body
+    const {image , name , email ,phonenumber} = req.body
     try {
 
-        const socialMediaLinks = {
-            Instagram:Instagramlink,
-            fascebook:facebooklink,
-            linkedin:linkedinlink,
-            twitter:twitterink,
-        }
+       
         const insertResponse = await col.insertOne({
             // _id: "7864972364724b4h2b4jhgh42",
             image:image,
             Name: name,
             phonenumber: phonenumber,
             email: email,
-            socialMediaLinks
         });
         console.log("insertResponse: ", insertResponse);
 
-        res.send('post created');
+        res.send('emply  created');
     } catch (e) {
         console.log("error inserting mongodb: ", e);
         res.status(500).send('server error, please try later');
@@ -53,7 +47,7 @@ router.post('/add-ship-caption', async (req, res, next) => {
 //     text: "updated text"
 // }
 
-router.put('/ship-caption/:postId', async (req, res, next) => {
+router.put('/emply/:postId', async (req, res, next) => {
 
     if (!ObjectId.isValid(req.params.postId)) {
         res.status(403).send(`Invalid post id`);
@@ -96,7 +90,7 @@ router.put('/ship-caption/:postId', async (req, res, next) => {
 })
 
 // DELETE  /api/v1/post/:userId/:postId
-router.delete('/ship-caption/:postId', async (req, res, next) => {
+router.delete('/emply/:postId', async (req, res, next) => {
 
     if (!ObjectId.isValid(req.params.postId)) {
         res.status(403).send(`Invalid post id`);

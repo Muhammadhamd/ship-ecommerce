@@ -30,8 +30,8 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-           
+
+        async function renderrequests() {
             try {
                const res = await axios.get('/subscribers')
                 .then((res)=>{console.log(res.data)
@@ -55,12 +55,19 @@
             } catch (error) {
                 consoole.log(error)
             }
+        }
+        document.addEventListener("DOMContentLoaded", async () => {
+           
+           renderrequests()
         });
 
         async function removeSubscriber(id){
 
-            axios.delete(`/remove-subsvriber/${id}`)
-            .then((res)=>{console.log(res)})
+            axios.delete(`/subscriber/${id}`)
+            .then((res)=>{console.log(res)
+           renderrequests()
+            })
+            .catch((e)=>{console.log(e)})
         }
     </script>
 </body>

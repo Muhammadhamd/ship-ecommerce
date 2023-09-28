@@ -19,7 +19,19 @@ const db = client.db("yacht"),
 
 
 
+      router.get("/quote-requests-currentuser", async(req,res ,next)=>{
+        const currentUser = req.decodedData
+        const userid = currentUser._id
+        const requests =await visiteReqCol.find({'currentUser._id' : userid}).toArray()
 
+        if (requests > 0) {
+       res.send(requests.length > -1)
+          return
+        }
+        res.send("no quote request")
+         
+      })
+      
   
        
     
@@ -38,7 +50,8 @@ router.post("/get-a-quote", async(req,res)=>{
    const isRequested = await visiteReqCol.findOne({
     $and: [
       { 'Data.data._id': Data.data._id },
-      { 'currentUser._id': currentUser._id }
+      { 'currentUser._id': currentUser._id },
+      { status: 'pending' }
     ]
   });
    if(isRequested){
@@ -49,7 +62,8 @@ router.post("/get-a-quote", async(req,res)=>{
    }
    await visiteReqCol.insertOne({
     Data,
-    currentUser
+    currentUser,
+    status:'pending'
    })
 
    res.status(200).send("data uploaded")

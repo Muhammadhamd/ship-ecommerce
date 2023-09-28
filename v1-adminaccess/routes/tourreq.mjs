@@ -74,10 +74,16 @@ router.put("/update-status-tour-req/:requestId", async (req, res) => {
    res.send(requests)
      
 })
+
 router.get("/count-tour-requests", async(req,res ,next)=>{
 
   const reqs = await visiteReqCol.countDocuments()
   res.json({ count: reqs });
    
+})
+
+router.get("/admin/tour-requests",(req,res) =>{
+
+  res.sendFile(path.join(__dirname , "pages/tourreq.html"))
 })
   export default router

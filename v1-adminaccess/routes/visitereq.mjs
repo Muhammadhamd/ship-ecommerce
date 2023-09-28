@@ -74,5 +74,9 @@ router.get("/count-visit-requests", async(req,res ,next)=>{
   res.json({ count: reqs });
    
 })
+router.get("/admin/visit-requests",(req,res) =>{
+
+  res.sendFile(path.join(__dirname , "pages/visitereqDb.html"))
+})
   export default router
   

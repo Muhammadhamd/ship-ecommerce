@@ -17,55 +17,6 @@ const db = client.db("yacht"),
 
 
 
-
-// const postSchema = new mongoose.Schema({
-
-//     username:{
-//         type:String,
-//     },
-//     sellername:{
-//         type:String,
-//     },
-//     userId:{
-//         type:String,
-
-//     },
-//     timeStamp:{
-//         type: Date,
-//         default: Date.now
-//     },
-//     description:{
-//         type:String,
-//         required:true
-//     },
-//     title:{
-//         type:String,
-//         required:true
-//     },
-//     tag:{
-//         type:String,
-//         required:true
-//     },
-    
-//     price:{
-//         type:Number,
-//         required:true
-//     } ,
-//     salesDiscount:{
-//         type:Number,
-        
-//     } ,
-//     // image:{
-//     //     type:String,
-//     //     required:true
-//     // } ,
-        
-// })
-
-// const postModel = mongoose.model("Post", postSchema)
-
-
-  
        
     
 
