@@ -30,49 +30,48 @@ app.use((req, res, next) => {
     if (userToken) {
         jwt.verify(req.cookies.Token, SECRET, function (err, decodedData) {
             if (!err) {
-    
+
                 console.log("user decodedData: ", decodedData);
-    
+
                 const nowDate = new Date().getTime() / 1000;
-    
+
                 if (decodedData.exp < nowDate) {
-    
+
                     res.status(401);
                     res.cookie('Token', '', {
                         maxAge: 1,
                         httpOnly: true
                     });
-    
+
                     res.status(401).send("login again")
-    
-    
-    
+
+
+
                 } else {
-    
+
                     console.log("token approved");
-    
+
                     req.decodedData = decodedData
                     next();
                 }
             } else {
-                      res.status(401).send("authentication failed")
-    
+                res.status(401).send("authentication failed")
             }
         });
-    }else if (adminToken) {
-        
+    } else if (adminToken) {
+
         jwt.verify(req.cookies.AdminToken, SECRET, function (err, decodedData) {
             if (!err) {
                 console.log("user decodedData: ", decodedData);
-    
+
                 const nowDate = new Date().getTime() / 1000;
-    
+
                 if (decodedData.exp < nowDate) {
                     res.cookie('AdminToken', '', {
                         maxAge: 1,
                         httpOnly: true
                     });
-    
+
                     res.status(401).send("login again");
                 } else {
                     console.log("token approved");
@@ -83,7 +82,7 @@ app.use((req, res, next) => {
                 res.status(401).send("authentication failed");
             }
         });
-    }else{
+    } else {
         res.send("login first")
     }
 })
@@ -122,4 +121,4 @@ app.use((req, res, next) => {
 
 
 app.use(v1adminaccess)
-app.listen(PORT,console.log(`listen on ${PORT}`))
+app.listen(PORT, console.log(`listen on ${PORT}`))

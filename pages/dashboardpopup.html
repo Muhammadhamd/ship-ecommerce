@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Advanced Inventory Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0"></script>
+    <style>
+        /* Styles for the modal popup */
+        .modal {
+            color: rgba(255, 255, 255, 0.471);
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+    </style>
+    <style>
+        .popup {
+            display: block;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style the form elements as needed */
+        .popup form {
+            text-align: center;
+            color: black;
+        }
+    </style>
+</head>
+
+<body class="bg-[#014d53] font-sans text-white">
+    <div class="min-h-screen  flex">
+        <!-- Sidebar -->
+        <aside class="bg-gray-800 text-white w-64 p-4">
+            <h2 class="text-xl font-semibold mb-6">Admin Dashboard</h2>
+            <ul class="mt-6 space-y-2">
+                <li><a href="#" class="block text-gray-200 hover:text-white">Change Email</a></li>
+                <li><a href="#" class="block text-gray-200 hover:text-white">Create New Admin</a></li>
+                <li><a href="#" class="block text-gray-200 hover:text-white">Show Subscribers</a></li>
+                <li><a href="#" class="block text-gray-200 hover:text-white">Show Boat Requests</a></li>
+            </ul>
+        </aside>
+        <!-- Main Content -->
+        <div id="popup-form" class="popup text-black">
+            <button><a href="/pages/dashbord.html">X</a></button>
+            <form id="myForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <h2 class="text-2xl font-bold mb-4">Create a Review</h2>
+                <div class="mb-4">
+                    <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                    <input type="text" id="name" name="name" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div class="mb-6">
+                    <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Review:</label>
+                    <textarea id="description" name="description" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"></textarea>
+                </div>
+                <button type="submit" id="review-submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Create Review
+                </button>
+            </form>
+        </div>
+
+        <!-- the popup form to submit reviews -->
+        <main class="flex-1 p-7 ">
+            <h1 class="text-4xl font-semibold">Dashboard Overview</h1>
+
+            <!-- Sales Chart -->
+
+            <div class="shadow-[0px_0px_5px_#000000bf] p-[20px]">
+                <div class="mt-6  p-4 rounded-lg shadow-md border border-[#BFA888] text-white">
+                    <div class="flex justify-between">
+                        <div class="mt-6">
+                            <h2 class="text-xl font-semibold mb-4 text-white">Sales Chart</h2>
+                            <label for="chartType" class="text-lg font-semibold">Select Chart Type:</label>
+                            <select id="chartType" class="border text-black rounded-md py-2 px-3 mt-2">
+                                <option value="line">Line Chart</option>
+                                <option value="bar">Bar Chart</option>
+                                <option value="pie">Pie Chart</option>
+                            </select>
+                        </div>
+                    </div>
+                    <canvas id="salesChart" class="w-[100%] h-[100%]" style="width: 100%; height: 100%;"></canvas>
+                </div>
+            </div>
+            <!-- Subscribers and Requests -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-white">
+                <!-- Subscribers -->
+                <div class="shadow-[0px_0px_5px_#000000bf] p-[10px]">
+                    <div class="border border-[#BFA888] rounded-lg p-4  hover:shadow-lg cursor-pointer transition duration-300"
+                        onclick="openSubscribersModal()">
+                        <h2 class="text-2xl font-semibold">Subscribers</h2>
+                        <p class="text-4xl font-bold mt-2" id="total-subscribers">loading...</p>
+                    </div>
+                </div>
+
+                <!-- Get a Quote Requests -->
+                <div class="shadow-[0px_0px_5px_#000000bf] p-[10px]">
+                    <div class="border border-[#BFA888] rounded-lg p-4  hover:shadow-lg cursor-pointer transition duration-300"
+                        onclick="openQuoteRequestsModal()">
+                        <h2 class="text-2xl font-semibold">Quote Requests</h2>
+                        <p class="text-4xl font-bold mt-2">543</p>
+                    </div>
+
+                </div>
+                <!-- Visit Requests -->
+                <div class="shadow-[0px_0px_5px_#000000bf] p-[10px]">
+                    <div class="border border-[#BFA888] rounded-lg p-4  hover:shadow-lg cursor-pointer transition duration-300"
+                        onclick="openVisitRequestsModal()">
+                        <h2 class="text-2xl font-semibold">Visit Requests</h2>
+                        <p class="text-4xl font-bold mt-2" id="total-visit-requests">loading...</p>
+                    </div>
+
+                </div>
+                <!-- Tour Requests -->
+                <div class="shadow-[0px_0px_5px_#000000bf] p-[10px]">
+                    <div class="border border-[#BFA888] rounded-lg p-4  hover:shadow-lg cursor-pointer transition duration-300"
+                        onclick="openTourRequestsModal()">
+                        <h2 class="text-2xl font-semibold">Tour Requests</h2>
+                        <p class="text-4xl font-bold mt-2" id="total-tour-requests">loading...</p>
+                    </div>
+
+                </div>
+                <!-- Valuation -->
+                <div class="shadow-[0px_0px_5px_#000000bf] p-[10px]">
+                    <div
+                        class="border border-[#BFA888] rounded-lg p-4  hover:shadow-lg cursor-pointer transition duration-300">
+                        <h2 class="text-2xl font-semibold">Valuation</h2>
+                        <p class="text-4xl font-bold mt-2" id="total-volution-requests">987</p>
+                    </div>
+                </div>
+                <div class="shadow-[0px_0px_5px_#000000bf] p-[10px]">
+                    <div
+                        class="border border-[#BFA888] rounded-lg p-4  hover:shadow-lg cursor-pointer transition duration-300">
+                        <h2 class="text-2xl font-semibold">Products posted</h2>
+                        <p class="text-4xl font-bold mt-2" id="total-products-posted">987</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Change Email Modal -->
+    <div id="changeEmailModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4">Change Email</h2>
+            <input type="text" class="border rounded-lg w-full py-2 px-3 mt-2" placeholder="New Email">
+            <button class="bg-blue-600 text-white py-2 px-4 mt-4 rounded-lg hover:bg-blue-700"
+                onclick="closeChangeEmailModal()">Save</button>
+        </div>
+    </div>
+
+    <!-- Subscribers Modal -->
+    <div id="subscribersModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4">Subscribers</h2>
+            <p class="mt-4">Total Subscribers: <span id="total-subscribers-modal">loading...</span></p>
+            <!-- Add your subscriber data rendering here -->
+        </div>
+    </div>
+
+    <!-- Boat Requests Modal -->
+    <div id="boatRequestsModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4">Boat Requests</h2>
+            <!-- Add your boat requests data rendering here -->
+        </div>
+    </div>
+
+    <!-- Visit Requests Modal -->
+    <div id="visitRequestsModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4">Visit Requests</h2>
+            <p class="mt-4">Total Visit Requests: <span id="total-visit-requests-modal">loading...</span></p>
+            <!-- Add your visit requests data rendering here -->
+        </div>
+    </div>
+
+    <!-- Tour Requests Modal -->
+    <div id="tourRequestsModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4">Tour Requests</h2>
+            <p class="mt-4">Total Tour Requests: <span id="total-tour-requests-modal">loading...</span></p>
+            <!-- Add your tour requests data rendering here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
+    <script>
+        // js functionality to send the form data to the server
+        document.getElementById("myForm").addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Collect form data
+            const formData = new FormData(this);
+            const wait = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, 1000);
+            })
+
+            // Create an object to store the data
+            const formDataObject = {};
+            formData.forEach((value, key) => {
+                formDataObject[key] = value;
+            });
+            // Send the data to the server
+            fetch('/create-card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Set the appropriate content type
+                },
+                body: JSON.stringify(formDataObject), // Convert data to JSON format
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.log("network response was not ok")
+                    }
+                    return response.json();
+                })
+                .then(async (data) => {
+                    // Handle the response from the server
+                    console.log(data);
+                    const form = document.getElementById("myForm");
+                    const message = document.createElement('p');
+                    message.textContent = data.message;
+                    message.id = "message";
+                    form.insertBefore(message, document.getElementById('review-submit'));
+
+                    // Wait for 1 second
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    // Remove the message
+                    form.removeChild(document.getElementById('message'));
+                    // You can do something with the response data here
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        });
+
+        // JavaScript functions to open and close the modal
+        function openChangeEmailModal() {
+            document.getElementById('changeEmailModal').style.display = 'block';
+        }
+
+        function closeChangeEmailModal() {
+            document.getElementById('changeEmailModal').style.display = 'none';
+        }
+
+        function openSubscribersModal() {
+            document.getElementById('subscribersModal').style.display = 'block';
+            // Fetch and populate subscriber data here
+        }
+
+        function openBoatRequestsModal() {
+            document.getElementById('boatRequestsModal').style.display = 'block';
+            // Fetch and populate boat requests data here
+        }
+
+        function openVisitRequestsModal() {
+            document.getElementById('visitRequestsModal').style.display = 'block';
+            // Fetch and populate visit requests data here
+        }
+
+        function openTourRequestsModal() {
+            document.getElementById('tourRequestsModal').style.display = 'block';
+            // Fetch and populate tour requests data here
+        }
+
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            let salesChart;
+
+            // Function to create and update the sales chart
+            function createSalesChart(chartType) {
+                if (salesChart) {
+                    salesChart.destroy(); // Destroy the previous chart instance
+                }
+
+                salesChart = new Chart(ctx, {
+                    type: chartType,
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Sales',
+                            data: [12, 19, 3, 5, 2, 3],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.351)', // Change x-axis tick label text color to white
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.151)', // Change x-axis grid lines color to white
+                                },
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: 'rgba(255, 255, 255, 0.351)', // Change y-axis tick label text color to white
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.151)', // Change x-axis grid lines color to white
+                                },
+                            },
+                        },
+                    }
+                });
+            }
+
+            // Initial chart creation
+            createSalesChart('line');
+
+            // Listen for changes in the select element
+            const chartTypeSelect = document.getElementById('chartType');
+            chartTypeSelect.addEventListener('change', (event) => {
+                const selectedChartType = event.target.value;
+                createSalesChart(selectedChartType);
+            });
+        });
+
+        // Dummy data for the sales chart
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                await axios.get("/countsubscribers")
+                    .then((res) => {
+                        document.getElementById("total-subscribers").innerHTML = res.data.count;
+                        document.getElementById("total-subscribers-modal").innerHTML = res.data.count;
+                    });
+
+                await axios.get("/count-tour-requests")
+                    .then((res) => {
+                        document.getElementById("total-visit-requests").innerHTML = res.data.count;
+                        document.getElementById("total-visit-requests-modal").innerHTML = res.data.count;
+                    });
+
+                await axios.get("/count-visit-requests")
+                    .then((res) => {
+                        document.getElementById("total-tour-requests").innerHTML = res.data.count;
+                        document.getElementById("total-tour-requests-modal").innerHTML = res.data.count;
+                    });
+                await axios.get("/countValution")
+                    .then((res) => {
+                        document.getElementById("total-volution-requests").innerHTML = res.data.count;
+                    });
+                await axios.get("/countproducts")
+                    .then((res) => {
+                        document.getElementById("total-products-posted").innerHTML = res.data.count;
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        });
+    </script>
+</body>
+
+</html>
