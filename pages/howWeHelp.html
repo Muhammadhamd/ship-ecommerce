@@ -170,7 +170,7 @@
          <div class=" bg-[#043E43] overflow-hidden md:pt-[3%] my-[8%]" >
             <h1 class="text-center mt-4" data-aos="slide-right">OUR SKILLED TEAM</h1>
             <h1 class="text-4xl text-center max-[500px]:text-2xl" data-aos="slide-left">Meet Our Professional Employees</h1>
-            <div class="owl-carousel owl-theme py-[4%] max-w-[90%] m-auto relative"id="team">
+            <div class="owl-carousel owl-theme py-[4%] max-w-[90%] m-auto relative" id="team">
                 <div class="team-div relative">
                     <img class="w-full" src="../assets/images/howwehelp/teams/team-1.jpg" alt="">
                     <div class="absolute flex flex-col left-[20px] bottom-[10px]">
@@ -365,6 +365,8 @@
         
             </div>
         </footer>
+        <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
         <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -387,6 +389,32 @@ setTimeout(function(){
 $.LoadingOverlay("hide");
 }, 4500);
 }
+
+document.addEventListener("DOMContentLoaded",async()=>{
+
+try {
+  const res= await axios.get("/employes")
+  console.log("data",res)
+  let data = res.data,
+    div = '';
+    // data.map((each)=>{
+    //     div += `<div class="owl-item active" style="width: 329.748px; margin-right: 10px;"><div class="team-div relative">
+    //                 <img class="w-full" src="../assets/images/howwehelp/teams/team-1.jpg" alt="">
+    //                 <div class="absolute flex flex-col left-[20px] bottom-[10px]">
+    //                     <h4 class="text-white text-xl font-[600]">Jacob Murphy</h4>
+    //                     <a href="mailto:jacob.murphy@mail.com font-[500]" class="text-white text-base">jacob.murphy@mail.com</a>
+    //                     <a href="tel:(459)0671088" class="text-white text-base font-[500]">(459)067-1088</a>
+    //                 </div>
+    //             </div></div>`
+    // })
+    // document.getElementById("team").innerHTML = div
+  
+} catch (error) {
+  console.log(error)
+  
+}
+console.log()
+})
         </script>
 </body>
 </html>

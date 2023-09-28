@@ -38,7 +38,7 @@
         <aside class="bg-gray-800 text-white w-64 p-4">
             <h2 class="text-xl font-semibold mb-6">Admin Dashboard</h2>
             <ul class="mt-6 space-y-2">
-                <li><a href="#" class="block text-gray-200 hover:text-white">Change Email</a></li>
+                <li><a href="#" class="block text-gray-200 hover:text-white" id="changeemail-btn">Change Email</a></li>
                 <li><a href="#" class="block text-gray-200 hover:text-white">Create New Admin</a></li>
                 <li><a href="/admin/subscribers" class="block text-gray-200 hover:text-white">Show Subscribers</a></li>
                 <li><a href="/admin/visit-requests" class="block text-gray-200 hover:text-white">Show Boat Visit Requests</a></li>
@@ -240,6 +240,35 @@
            </div>
         </div>
     </div>
+    <div class="absolute inset-0 flex items-center text-black justify-center z-50 hidden" id="changeemail">
+        <div class="bg-white max-w-[900px] w-full p-6 rounded-lg shadow-lg">
+            <span class="absolute top-2 right-2 cursor-pointer" id="email-closePopupBtn">&times;</span>
+            <h2 class="text-xl font-semibold mb-4">Change email</h2>
+           <div class="flex flex-wrap">
+            <form id="emailform">
+                <div class="flex gap-[10px]">
+                
+ 
+                 <div class="mb-4">
+                     <label for="email" class="block text-gray-700 font-semibold">Email:</label>
+                     <input type="email" id="to-change-email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded" required>
+                 </div>
+                </div>
+                   <div class="text-center">
+                     <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full">
+                         Submit
+                     </button>
+                 </div>
+             </form>
+             <div>
+                <h1>already existing data</h1>
+                <div id="existing-email-div">
+                  loading...
+                </div>
+             </div>
+           </div>
+        </div>
+    </div>
     <!-- Change Email Modal -->
     <div id="changeEmailModal" class="modal">
         <div class="modal-content">
@@ -248,7 +277,6 @@
             <button class="bg-blue-600 text-white py-2 px-4 mt-4 rounded-lg hover:bg-blue-700" onclick="closeChangeEmailModal()">Save</button>
         </div>
     </div>
-
     <!-- Subscribers Modal -->
     <div id="subscribersModal" class="modal">
         <div class="modal-content">
@@ -311,11 +339,7 @@
             // Fetch and populate visit requests data here
         }
 
-        function openTourRequestsModal() {
-            document.getElementById('tourRequestsModal').style.display = 'block';
-            // Fetch and populate tour requests data here
-        }
-
+        
 
         document.addEventListener("DOMContentLoaded", async () => {
     const ctx = document.getElementById('salesChart').getContext('2d');
@@ -554,7 +578,7 @@
                     div += `
                     <div class="border-b relative">
                         <div class="text-sm text-right">
-                            <button onclick="deleteThisCaption('${each._id}')">delete</button></div>
+                            <button onclick="deleteThisEmploy('${each._id}')">delete</button></div>
                        <div class="flex gap-[4px]">
                         <div class="w-[40px] h-[40px] overflow-hidden rounded-full">
                             <img src="" class="w-full" alt="no image">
@@ -577,11 +601,12 @@
        async function deleteThisEmploy(id){
 
         try {
-            const res = axios.delete(`/employ/${id}`)
+            const res =await axios.delete(`/employ/${id}`)
                   .then((res)=>{
                   console.log(res.data)
                   getEmployData()
                   })
+                  console.log(res)
         } catch (error) {
             console.log(error)
         }
@@ -605,8 +630,8 @@
 
         // Close the popup if the overlay is clicked
         Addemply.addEventListener("click", (event) => {
-            if (event.target === popup) {
-                popup.classList.add("hidden");
+            if (event.target === Addemply) {
+                Addemply.classList.add("hidden");
             }
         });
 
@@ -639,6 +664,45 @@
             // Close the popup after processing the form data (you can add your own logic here)
             // popup.classList.add("hidden");
         });
+    </script>
+    <script>
+
+        async function getemail(params) {
+            try {
+                const res = await axios.get("/currentemail")
+            console.log(res)
+            document.getElementById("existing-email-data").innerHTML = res.data.email
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        document.getElementById('changeemail-btn').addEventListener("click",(e)=>{
+        // const emailclosePopupBtn = document.getElementById("email-closePopupBtn");
+        document.getElementById('changeemail').classList.remove("hidden");
+        //    getEmployData()
+        getemail()
+
+        })
+
+        document.getElementById("emailform").addEventListener("submit",async(e)=>{
+            e.preventDefault()
+            let setemail = document.getElementById("to-change-email").value
+            console.log(setemail)
+            try {
+                const res = await axios.put("/setemail",{
+                    email:setemail
+                })
+                .then((res)=>{
+                    getemail()
+                })
+                .catch((e)=>{
+                    console.log(e)
+                })
+                console.log(res)
+            } catch (error) {
+                console.log(error)
+            }
+        })
     </script>
 </body>
 </html>
