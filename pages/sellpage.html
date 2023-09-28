@@ -425,6 +425,26 @@ $.LoadingOverlay("hide");
 document.getElementById("getAValuation").addEventListener("submit",async(e)=>{
     e.preventDefault()
 
+    let attatcument = document.getElementById("attatchment").files[0]
+    if (attatcument) {
+        const reader = new FileReader();
+
+    reader.onload = function () {
+      const imageData = reader.result.split(",")[1]; // Get base64 data
+
+      // Send the base64 image data to the backend
+      sendImageDataToBackend(imageData);
+    };
+
+    reader.readAsDataURL(attatcument);
+    }
+
+     async function sendImageDataToBackend(image){
+   const res =await axios.post('/getAvalution',{
+    attatcumentis:image
+   })
+        
+    }
    try {
    const res =await axios.post('/getAvalution',{
         firstName:document.getElementById("firstname").value , 

@@ -12,8 +12,10 @@ import reviews from './routes/reviewRoute.mjs'
 import blogs from './routes/userBlogRoute.mjs'
 import quotereq from "./routes/quotereq.mjs"
 import emploiesreq from "./routes/ouremployes.mjs"
+import setEmailRoute from "./routes/setemail.mjs"
 
 router.use(emploiesreq)
+router.use(setEmailRoute)
 router.use(dashboardRoutes)
 router.use(quotereq)
 router.use(reviewRoutes)

@@ -430,11 +430,12 @@ document.addEventListener("DOMContentLoaded",async()=>{
 
   try {
     const res= await axios.get("/ship-captions")
-    console.log(res.data)
+    console.log("data",res)
   } catch (error) {
-    console.log(errror)
+    console.log(error)
     
   }
+  console.log()
 })
       </script>
 </body>

@@ -7,7 +7,7 @@ const __dirname = path.resolve()
 import nodemailer from "nodemailer"
 import {client} from "../../db/mongodb.mjs"
 import { Timestamp } from 'mongodb'
-
+import emailsend from "../../emailconfog.mjs"
 const db = client.db("yacht"),
     //   userCol = db.collection("users"),
       contactReqCol = db.collection('contactRequestes')
@@ -25,31 +25,11 @@ router.post("/contactReq",async(req,res)=>{
         status:"pending"
     })
 
-    const transporter = await nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        auth: {
-            user: 'rachel.spencer50@ethereal.email',
-            pass: '8kNebyYMJ38J2BJVtT'
-        }
-    });
-
-    const mailOptions = {
-        from: 'muhammadhamd.dev@gmail.com',
-        to: 'gumnamfacts65@gmail.com', // Replace with the admin's email address
-        subject: 'New User Post',
-        text: 'Client want  to contact to you check it out',
-      };
-    
-      await transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.error('Error sending email:', error);
-          res.status(500).send('An error occurred while sending the email notification.');
-          return
-        } else {
-          console.log('Email sent:', info.response);
-        }
-      });
+  const title = "someone request you to contanct"
+  const text = "someone request you to contanct fag aeg aegae g"
+  
+    emailsend(title ,text)
+      
 
     res.send(`Thankyou ${name} for contact your request is sucessfully registerd we will response you later`)
  } catch (error) {

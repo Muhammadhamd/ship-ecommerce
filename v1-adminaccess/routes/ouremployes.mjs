@@ -90,7 +90,7 @@ router.put('/emply/:postId', async (req, res, next) => {
 })
 
 // DELETE  /api/v1/post/:userId/:postId
-router.delete('/emply/:postId', async (req, res, next) => {
+router.delete('/employ/:postId', async (req, res, next) => {
 
     if (!ObjectId.isValid(req.params.postId)) {
         res.status(403).send(`Invalid post id`);
