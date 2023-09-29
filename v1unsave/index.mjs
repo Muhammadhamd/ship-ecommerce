@@ -16,9 +16,9 @@ import authRoute from "./routes/auth.mjs"
 import reviewRoute from "./routes/review.mjs"
 import ourshipcaptionRoute from "./routes/ourshipcaption.mjs"
 import emploiesRoute from "./routes/emploies.mjs"
-import revAndblogRoute from "./routes/getRevsAndBlogs.mjs"
-
+import reviewsAndBlogsRouter from "./routes/getRevsAndBlogs.mjs"
 router.use(emploiesRoute)
+router.use(reviewsAndBlogsRouter)
 router.use(ourshipcaptionRoute)
 router.use(authRoute)
 router.use(reviewRoute)
@@ -34,6 +34,5 @@ router.use (howehelpRoute)
 router.use (didyouknowRoute)
 router.use (subscriberouter)
 router.use (adminloginrouter)
-router.use(revAndblogRoute)
 
 export default router

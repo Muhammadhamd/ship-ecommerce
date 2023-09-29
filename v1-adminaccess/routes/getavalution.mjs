@@ -38,7 +38,8 @@ const db = client.db("yacht"),
       
 // Add this route to your existing Express application
 router.put("/update-status-get-a-valution/:requestId", async (req, res) => {
-  
+  const requested = req.params.requestId
+  const {status} = req.body
   try {
 
 
@@ -46,13 +47,13 @@ router.put("/update-status-get-a-valution/:requestId", async (req, res) => {
        
        // Update the status of the tour request
        const updatedRequest = await visiteReqCol.findOneAndUpdate(
-         { _id: new ObjectId(requestId) },
+         { _id: new ObjectId(requested) },
          { $set: { status,updatedAt } },
          { returnOriginal: false }
        );
    
        if (!updatedRequest) {
-         res.status(404).send("Tour request not found");
+         res.status(404).send("valution request not found");
          return;
        }
    

@@ -40,7 +40,7 @@ const db = client.db("yacht"),
                     { userId: CurrentuserId },
                     { $pull: { 'wishListData': { postId: postid } } }
                   );
-                  return res.send('Removed from wishlist');
+                  return res.json({'Added':false});
             }
       
             // Add the new post ID to the wishlist
@@ -50,7 +50,7 @@ const db = client.db("yacht"),
             );
           }
       
-          res.send('Added to wishlist');
+          return res.json({'Added':true});
         } catch (error) {
           console.error(error);
           res.status(500).send('An error occurred');
@@ -85,18 +85,19 @@ const db = client.db("yacht"),
         }
       });
       
-      router.get("/check-post-is-in-wishlist", async(req,res)=>{
+      router.get("/check-post-is-in-wishlist/:id", async(req,res)=>{
         const CurrentuserId = req.decodedData._id;
-
+        const postid = req.params.id
         const wishlist = await listCol.findOne({ userId: CurrentuserId });
 
         const matchItem = wishlist.wishListData.find((item) => item.postId.toString() === postid);
 
-        if ((matchItem)) {
-        res.status(200).send(`isInWishlist:${true}`)
-            return
+        if (matchItem) {
+          return res.json({'Added':true});
+           
         }
-        res.send(`isInWishlist:${false}`)
+        return res.json({'Added':false});
+
       })
       router.get("/wishlist",(req,res)=>{
         res.sendFile(path.join(__dirname,"pages/wishlist.html"))

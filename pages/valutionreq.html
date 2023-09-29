@@ -130,7 +130,7 @@
                         ${
                             item.status === "pending" 
                        ? `<button class="px-3 py-2 text-white text-sm bg-violet-500" onclick="declineProduch('${item._id}')">decline</button> 
-                        <button class="px-3 py-2 text-white text-sm bg-violet-500" onclick=" openPopupForm('${item._id}')">Publish as Product</button>`
+                        <button class="px-3 py-2 text-white text-sm bg-violet-500" onclick="publish('${item._id}')">Publish as Product</button>`
                     : `admin has ${item.status} this request`
                  
                 }
@@ -166,7 +166,7 @@
                 console.log(error)
             }
         }
-        async function openPopupForm(dataItem) {
+        async function publish(dataItem) {
             console.log(dataItem)
              
 
@@ -180,13 +180,21 @@
                 console.log(error)
                 
             }
+            try {
+                const res = await axios.put(`/update-status-valution-req/${id}`,{
+                    status:"Published"
+                })
+                .then(()=>{
+                    renderrequests()
+                })
+                console.log(res)
+            } catch (error) {
+                
+            }
         }
 
         // Function to close the popup form
-        function closePopupForm() {
-            const popupForm = document.getElementById("popupForm");
-            popupForm.style.display = "none";
-        }
+     
 
     </script>
 </body>

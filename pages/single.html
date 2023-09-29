@@ -237,31 +237,32 @@
 
                 <div id="review-div"></div>
              </div>
-             <div class="w-[100%] sm:w-[45%]">
-                <p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Give review
-                </p>
-                <p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Your email address will not be published. Required fields are marked *
-                </p>
-                <p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Your review *
-                </p>
-                <textarea class="w-full bg-transparent border border-solid h-[120px] rounded">
-
-                </textarea>
-                <div class="flex"> 
-                  <div class="flex flex-col">
-                    <label class="text-base text-white">Name*</label>
-                    <input type="text"name="name"class="w-full bg-transparent border border-solid h-[35px] rounded">
-                  </div>  
-                  <div class="flex flex-col mx-[0] sm:mx-[1.5%]">
-                    <label class="text-base text-white">Email*</label>
-                    <input type="email"name="name" class=" w-full bg-transparent border border-solid h-[35px] rounded">
-                  </div>
-                </div>
-                <div class="flex"> <input type="checkbox"><p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Save my name, email, and website in this browser for the next 
-                    time I comment.
-                </p></div>
-                <input type="submit" value="submit" class=" px-8 rounded py-2 bg-[#BFA888] uppercase text-base text-white"> 
-             </div>
+             
+                <form id="add-new-review" class="w-[100%] sm:w-[45%]">
+                    <p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Give review
+                    </p>
+                    <p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Your email address will not be published. Required fields are marked *
+                    </p>
+                    <p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Your review *
+                    </p>
+                    <textarea class="w-full bg-transparent border border-solid h-[120px] rounded" id="comment-message">
+    
+                    </textarea>
+                    <div class="flex"> 
+                      <div class="flex flex-col">
+                        <label class="text-base text-white">Name*</label>
+                        <input type="text" id="comment-name" name="name"class="w-full bg-transparent border border-solid h-[35px] rounded">
+                      </div>  
+                      <div class="flex flex-col mx-[0] sm:mx-[1.5%]">
+                        <label class="text-base text-white">Email*</label>
+                        <input type="email"name="email" id="comment-email" class=" w-full bg-transparent border border-solid h-[35px] rounded">
+                      </div>
+                    </div>
+                    <div class="flex"> <input type="checkbox" id="save-name-email-local"><p class="text-white text-base md:text-lg 2xl:text-xl pt-2 py-2  capitalize">Save my name, email, and website in this browser for the next 
+                        time I comment.
+                    </p></div>
+                    <input type="submit" value="submit" class=" px-8 rounded py-2 bg-[#BFA888] uppercase text-base text-white"> 
+                 </form>
             </div>
            
           </div>
@@ -503,12 +504,12 @@ $.LoadingOverlay("hide");
 }, 4500);
 }
 
-let data;
-document.addEventListener("DOMContentLoaded",(e)=>{
+async function renderpostdata(params) {
     const postId = window.location.pathname.split('/').pop();
     console.log(postId)
 axios.get(`/postdata/${postId}`)
 .then((res)=>{console.log(res)
+    let data;
 
    data = res.data
 
@@ -516,26 +517,45 @@ axios.get(`/postdata/${postId}`)
    document.getElementById("boatName").innerHTML = data.boatName
    document.getElementById("description").innerHTML = data.addNote
    let reviewdata;
-   reviews.map((review)=>{
+   if(reviews && reviews.length > -1){
+    reviews.map((review)=>{
 
-    reviewdata += ` <div class="mb-4 border border-solid rounded  p-2.5">
-                    <p class="text-white text-base md:text-lg lg:text-xl pt-2 py-2  capitalize">${review.name}</p>
-                    <div class="flex">
-                        <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
-                        <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
-                        <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
-                        <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
-                        <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
-                    </div>
-                    <p class="text-white text-base md:text-lg 2xl:text-xl pt-4 py-2  capitalize">${review.text}</p>
-                </div>`
+reviewdata += ` <div class="mb-4 border border-solid rounded  p-2.5">
+                <p class="text-white text-base md:text-lg lg:text-xl pt-2 py-2  capitalize">${review.name}</p>
+                <div class="flex">
+                    <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
+                    <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
+                    <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
+                    <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
+                    <img src="../assets/images/singlepage/icons8-star-30.png"class="w-[4.5%]">
+                </div>
+                <p class="text-white text-base md:text-lg 2xl:text-xl pt-4 py-2  capitalize">${review.text}</p>
+            </div>`
 
-   })
-   document.getElementById("review-div").innerHTML = reviewdata
-   
+})
+document.getElementById("review-div").innerHTML = reviewdata
+
+   }
+ 
 })
 .catch((e)=>console.log(e))
-})
+}
+
+async function checkwishlist(params) {
+    const postId = window.location.pathname.split('/').pop();
+
+    try {
+    res = await axios.get(`/check-post-is-in-wishlist/${postId}`)
+    .then((res)=>{
+        console.log(res.data.Added)
+        const isIn = res.data.Added
+        isIn ? document.getElementById("add-wishlist").innerHTML = `<i class="text-xl text-red bi-heart-fill ml-4"></i>`
+        : document.getElementById("add-wishlist").innerHTML = `<i class="text-xl text-white bg-red bi-heart ml-4"></i>`
+    })
+   } catch (error) {
+    
+   }
+}
 
 document.getElementById("tour-req-btn").addEventListener("click",(e)=>{
 
@@ -550,6 +570,7 @@ document.getElementById("tour-req-btn").addEventListener("click",(e)=>{
     })
 })
 
+
 document.getElementById("add-wishlist").addEventListener("click",async(e)=>{
     const postId = window.location.pathname.split('/').pop();
    try {
@@ -557,14 +578,42 @@ document.getElementById("add-wishlist").addEventListener("click",async(e)=>{
         postid:postId
     })
     console.log(res.data)
+        checkwishlist()
+
    } catch (error) {
     console.log(error)
    }
-
+ 
 })
 document.addEventListener("DOMContentLoaded",()=>{
+renderpostdata()
+        checkwishlist()
 
-document.getElementById("add-wishlist").innerHTML = `<i class="text-xl text-white bg-red bi-heart ml-4"></i>`
+
+})
+
+
+
+async function renderComments(){
+    const postId = window.location.pathname.split('/').pop();
+    try {
+        const res = await axios.post(`/review/${postId}`,{
+            name:document.getElementById("comment-name").value,
+            email:document.getElementById("comment-email").value,
+            text:document.getElementById("comment-message").value,
+        })
+        .then(()=>{
+            renderpostdata()
+        })
+        console.log(res.data)
+    } catch (error) {
+        console.log("error",error)
+    }
+}
+document.getElementById("add-new-review").addEventListener("submit",async(e)=>{
+    e.preventDefault()
+  renderComments()
+  
 })
 </script>
 </body>

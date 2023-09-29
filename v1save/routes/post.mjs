@@ -5,7 +5,7 @@ import admin from "firebase-admin";
 import { v4 as uuidv4 } from "uuid";
 import { ObjectId } from "mongodb";
 import nodemailer from "nodemailer";
-
+import multer from "multer"
 const __dirname = path.resolve();
 const router = express.Router();
 import { client } from "../../db/mongodb.mjs";
@@ -15,24 +15,34 @@ const db = client.db("yacht"),
   postsCol = db.collection("getAvalution"),
   productsCol = db.collection("product");
 
-// Initialize Firebase Admin SDK with your service account key
-const firebaseConfig = {
-  apiKey: "AIzaSyDcwQsQZBVGCl1oYr9jvUZSXmR0_A6C-SI",
-  authDomain: "buying-selling-hh.firebaseapp.com",
-  projectId: "buying-selling-hh",
-  storageBucket: "buying-selling-hh.appspot.com",
-  messagingSenderId: "293548727797",
-  appId: "1:293548727797:web:ffce5ab28bff14fb2754bc"
-};
 
-// Initialize Firebase
-   admin.initializeApp(firebaseConfig);
 
-const bucket = admin.storage().bucket();
 
-router.post("/getAValution",  async (req, res) => {
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads'); // Uploads will be stored in the 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+  cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post("/getAValution", upload.single('filename'),  async (req, res) => {
   const currentUser = req.decodedData;
+  if (!currentUser) {
+   return res.status(401).send("login please we are having trouble to get your account data")
+  }
+  console.log(req.file)
+  // console.log(req.body.lastName)
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
 
+  const uploadedFile = req.file;
+  const imagePath = uploadedFile.path;
   const {
     firstName,
     LastName,
@@ -54,64 +64,43 @@ router.post("/getAValution",  async (req, res) => {
     phoneNumber,
   } = req.body;
 
-   console.log("data ",req.body)
-  // Generate a unique filename for each attachment
-  // const attachmentFiles = [];
-  // for (const file of attatchment) {
-  //   const uniqueFilename = `${currentUser._id}_${Date.now()}_${uuidv4()}`;
-  //   const fileUpload = bucket.file(uniqueFilename);
+   console.log("data updateda",imagePath)
+  
 
-  //   const blobStream = fileUpload.createWriteStream({
-  //     metadata: {
-  //       contentType: file.mimetype,
-  //     },
-  //   });
+ 
+  
+ 
+        postsCol.insertOne({
+          userAccoundId: currentUser._id,
+          useremail: currentUser.email,
+          userphoneNumber: currentUser.phoneNumber,
+          username: currentUser.name,
+          timestamp: new Date(),
+          status: "pending",
+          firstName,
+          LastName,
+          engine,
+          hours,
+          boatName,
+          generator,
+          boatcondition,
+          location,
+          owneroutright,
+          amountOfOwner,
+          route,
+          attachments:imagePath , // Use the URLs of uploaded attachments
+          addNote,
+          address,
+          make,
+          model,
+          email,
+          phoneNumber
+        });
 
-  //   blobStream.on("error", (error) => {
-  //     console.error("Error uploading attachment:", error);
-  //   });
+        // Send response after saving the post
+        res.send("Post is created and saved in the database");
+      
 
-  //   blobStream.on("finish", () => {
-  //     // The file has been uploaded successfully
-  //     const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
-  //     attachmentFiles.push(publicUrl);
-
-  //     if (attachmentFiles.length === attatchment.length) {
-  //       // All attachments have been uploaded, proceed to save the post
-  //       postsCol.insertOne({
-  //         userAccoundId: currentUser._id,
-  //         useremail: currentUser.email,
-  //         userphoneNumber: currentUser.phoneNumber,
-  //         username: currentUser.name,
-  //         timestamp: new Date(),
-  //         status: "pending",
-  //         firstName,
-  //         LastName,
-  //         engine,
-  //         hours,
-  //         boatName,
-  //         generator,
-  //         boatcondition,
-  //         location,
-  //         owneroutright,
-  //         amountOfOwner,
-  //         route,
-  //         attatchment: attachmentFiles, // Use the URLs of uploaded attachments
-  //         addNote,
-  //         address,
-  //         make,
-  //         model,
-  //         email,
-  //         phoneNumber,
-  //       });
-
-  //       // Send response after saving the post
-  //       res.send("Post is created and saved in the database");
-  //     }
-  //   });
-
-  //   blobStream.end(file.buffer); // Start uploading the file
-  // }
 });
 
 router.get("/productsCurrentUser", async (req, res) => {

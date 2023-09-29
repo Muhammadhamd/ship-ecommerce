@@ -9,20 +9,20 @@ const SECRET = process.env.Secret || 'topsecret'
 
 
 
-router.get('/admin', (req, res) => {
-
-
-    res.sendFile(path.join(__dirname, 'pages/dashbord.html'))
+router.get('/admin', (req,res)=>{
+ 
+   
+    res.sendFile(path.join(__dirname , 'pages/dashbord.html'))
 })
 
-router.get("/Adminlogout", (req, res) => {
+router.get("/Adminlogout",(req, res) => {
 
     res.cookie('AdminToken', '', {
-        maxAge: 1,
-        httpOnly: true
-    });
-
-    res.send("Logout successful");
-    console.log(req.cookies)
-})
+         maxAge: 1,
+         httpOnly: true
+     });
+ 
+     res.send("Logout successful" );
+     console.log(req.cookies)
+ })
 export default router

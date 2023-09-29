@@ -2,29 +2,44 @@
 import express from 'express';
 import { client } from '../../db/mongodb.mjs'
 import { ObjectId } from 'mongodb'
-
+import multer from 'multer'
 const db = client.db("yacht");
 const col = db.collection("employe");
-
+import path from "path"
+const __dirname = path.resolve()
 let router = express.Router()
+import fs from "fs"
 
-
-
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './uploads/employeesImages'); // Uploads will be stored in the 'uploads' directory
+    },
+    filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+    },
+  });
+  
+  const upload = multer({ storage });
 // POST    /api/v1/post
-router.post('/add-employ', async (req, res, next) => {
+router.post('/add-employ',upload.single('head-image'), async (req, res, next) => {
 
 
     console.log(req.body)
     const {image , name , email ,phonenumber} = req.body
     try {
 
-       
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+          }
+          const uploadedFile = req.file;
+          const imagePath = uploadedFile.path;
         const insertResponse = await col.insertOne({
             // _id: "7864972364724b4h2b4jhgh42",
             image:image,
             Name: name,
             phonenumber: phonenumber,
             email: email,
+            image:imagePath
         });
         console.log("insertResponse: ", insertResponse);
 
@@ -97,9 +112,19 @@ router.delete('/employ/:postId', async (req, res, next) => {
         return;
     }
 
+
     try {
+        const post = await col.findOne({_id : new ObjectId(req.params.postId)})
+        const filePath = post.image; 
+        console.log(filePath)
+    if (filePath) {
+        // Delete the file from the server folder
+        const imagePath = path.join(__dirname,  filePath);
+        fs.unlinkSync(imagePath);
+      }
+
         const deleteResponse = await col.findOneAndDelete({ _id: new ObjectId(req.params.postId) });
-        
+
         deleteResponse ? res.send('post deleted') : res.status(404).send('no post found')
         console.log("deleteResponse: ", deleteResponse);
     } catch (e) {

@@ -69,32 +69,13 @@ const postsData = [
   },
 
 
-  {
-    title:"ali",
-    text:"this is hamd",
-    issale:40,
-    price:3000,
-    id:'211'
-
-  },
-  {
-    title:"ramal",
-    text:"this is hamd",
-    issale:false,
-    price:3000
-  },
-  {
-    title:"hamd",
-    text:"this is hamd",
-    issale:40,
-    price:3000
-  },
+ 
 ]
 router.post("/review/:id", async(req,res ,next)=>{
     const postid = req.params.id
     const {name , email , text} = req.body
 
-
+console.log("data coming")
      
 
  

@@ -446,26 +446,35 @@ document.getElementById("getAValuation").addEventListener("submit",async(e)=>{
         
     }
    try {
-   const res =await axios.post('/getAvalution',{
-        firstName:document.getElementById("firstname").value , 
-        LastName:document.getElementById("lastname").value  ,
-        engine:document.getElementById("engine").value  ,
-         hours :document.getElementById("hours").value ,
-          boatName:document.getElementById("boatname").value ,
-          generator:document.getElementById("generator").value ,
-          boatcondition :document.getElementById("boatCondition").value ,
-           location:document.getElementById("location").value ,
-           owneroutright:document.getElementById("owneroutright").value ,
-           amountOfOwner:document.getElementById("amountofowner").value  , 
-           route:document.getElementById("route").value ,
-           attatchment:document.getElementById("attatchment").files ,
-           addNote:document.getElementById("note").value , 
-           address  :document.getElementById("address").value , 
-        make:document.getElementById("make").value ,
-        model:document.getElementById("model").value ,
-        email:document.getElementById("email").value  ,
-        phoneNumber:document.getElementById("phonenumber").value
-    })
+    const formData = new FormData();
+
+// Append all the form fields to the FormData object
+formData.append("firstJame",document.getElementById("firstname").value);
+formData.append("lastName", document.getElementById("lastname").value);
+formData.append("engine", document.getElementById("engine").value);
+formData.append("hours", document.getElementById("hours").value);
+formData.append("boatName", document.getElementById("boatname").value);
+formData.append("generator", document.getElementById("generator").value);
+formData.append("boatCondition", document.getElementById("boatCondition").value);
+formData.append("location", document.getElementById("location").value);
+formData.append("owneroutright", document.getElementById("owneroutright").value);
+formData.append("amountofowner", document.getElementById("amountofowner").value);
+formData.append("route", document.getElementById("route").value);
+formData.append("filename", document.getElementById("attatchment").files[0]); // Handle files like this
+formData.append("addNote", document.getElementById("note").value);
+formData.append("address", document.getElementById("address").value);
+formData.append("make", document.getElementById("make").value);
+formData.append("model", document.getElementById("model").value);
+formData.append("email", document.getElementById("email").value);
+formData.append("phoneNumber", document.getElementById("phonenumber").value);
+console.log("fa", formData.get("filename"))
+   const res =await axios.post('/getAvalution', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Important for file upload
+        },})
+        .then((res)=>{
+            console.log(res)
+        })
     console.log(res.data)
    } catch (error) {
     cosnole.log(error)

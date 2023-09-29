@@ -99,6 +99,14 @@ router.post('/publish-product/:id',async(req,res)=>{
   );
 
   const inserting_post = await postsCol.findOne({ _id: new ObjectId(reqId) })
+  
+
+
+
+
+
+
+
     
    await productCol.insertOne({
     inserting_post

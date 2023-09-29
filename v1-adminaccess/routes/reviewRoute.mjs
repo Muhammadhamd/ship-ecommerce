@@ -9,7 +9,7 @@ const userReview = db.collection("userReview")
 
 
 
-router.post('/create-card', async (req, res, next) => {
+router.post('/create-card-review', async (req, res, next) => {
     const name = req.body.name
     const description = req.body.description
     console.log(name)
@@ -26,7 +26,7 @@ router.post('/create-card', async (req, res, next) => {
     return res.status(200).json({"message": "review inserted"})
 })
 
-router.get('/get-reviews', async (req, res) => {
+router.get('/get-card-reviews', async (req, res) => {
     try {
         const revs = await userReview.find({}).toArray()
         console.log(revs);
@@ -36,7 +36,7 @@ router.get('/get-reviews', async (req, res) => {
     }
 })
 
-router.delete('/delete-review/:id', async (req, res) => {
+router.delete('/delete-cart-review/:id', async (req, res) => {
     try {
         const reqId = req.params;
         const deleteReq = await userReview.findOneAndDelete({
